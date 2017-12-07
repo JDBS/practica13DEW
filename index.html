@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Intento 3</title>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <div id="map-app">
+    <fieldset>
+      <legend>Controles</legend>
+      
+      <div id="inputs">
+        <fieldset class="input-section">
+          <span class="toggle-text">Ciclo</span>
+          <label for="pais-toggle" class="toggle">
+            <input type="checkbox" name="pais" id="pais-toggle"/>
+            <div class="toggle-control"></div>
+          </label>
+          <span class="toggle-text">Pais</span>
+        </fieldset>
+        <fieldset id="button-container">
+        </fieldset>
+        <fieldset class="input-section" id="map-selection">
+        </fieldset>
+      </div>
+    </fieldset>
+    <div id="map"></div>  
+  </div>
+</body>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrnaPp3lllsMvbuwahUFG6q3hrjSfR4aU"></script>
+	<script type="text/javascript" src="js/Config.js"></script>
+  <script type="text/javascript" src="js/LocalSaver.js"></script>
+  <script type="text/javascript" src="js/Position.js"></script>
+  <script type="text/javascript" src="js/MapObject.js"></script>
+  <script type="text/javascript" src="js/MapApp.js"></script>
+</html>
