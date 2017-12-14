@@ -16,7 +16,7 @@ MapApp.prototype.loadData=function(){
     xobj.overrideMimeType("application/json");
     xobj.open('GET', 'jsonData.json', true); // Replace 'my_data' with the path to your file
     xobj.onreadystatechange = function () {
-          if (xobj.readyState == 4 && xobj.status == "200") {
+          if (xobj.readyState == 4) {
             // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
             this.data["students"]=JSON.parse(xobj.responseText);
   			this.toggleEvent();

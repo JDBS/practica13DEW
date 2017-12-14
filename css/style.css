@@ -22,19 +22,22 @@ h4 {
   height: 20px;
   border-width: 2px;
   box-sizing: border-box;
-  box-shadow: 0px 0px 2px black inset; }
+  box-shadow: 0px 0px 2px black inset;
+  position: relative; }
 
 .toggle > div {
+  position: absolute;
   display: inline-block;
   width: 16px;
   height: 16px;
   box-sizing: border-box;
   margin-left: -4px;
   margin-right: -4px;
-  transition: margin 0.2s; }
+  transition: transform 0.2s;
+  transform: translate(4.5px, 0px); }
 
 .toggle > input:checked + div {
-  margin-left: 16px; }
+  transform: translate(23px, 0px); }
 
 .toggle {
   background-color: #EEEEEE; }

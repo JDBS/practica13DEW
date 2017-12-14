@@ -120,7 +120,6 @@ MapObject.prototype.addMarkerByAddress=function(address, content){
 
 /*Método interno: Añade un marcado con una posición exacta*/
 MapObject.prototype.addMarkerByPosition=function(position,content){
-  var marker = this.getMarkerFrom(position);
 
   var infoWindow = new google.maps.InfoWindow({
     content: content
