@@ -50,6 +50,20 @@ Position.prototype.getStruct=function(){
   }
 }
 
+Position.prototype.setFromMarker=function(marker){
+  this.latitude=parseFloat(marker.getPosition().lat());
+  this.longitude=parseFloat(marker.getPosition().lng());
+}
+
+Position.prototype.equalTo=function(position){
+  if(!(position instanceof Position)){
+    return false;
+  }
+
+  return (parseFloat(this.latitude) == parseFloat(position.latitude) && 
+    parseFloat(this.longitude) == parseFloat(position.longitude));
+}
+
 Position.prototype.setPositionByLiteral=function(literal){
   if(literal)
   this.latitude=literal.lat();

@@ -101,8 +101,10 @@ MapApp.prototype.searchByCourses=function(){
 				student.pais + " " + student.ciudad,
 				this.createInfoText(student))
 		);
-	
-	setTimeout(this.map.centerAtMarkers.bind(this.map),500);
+
+
+	setTimeout(this.map.centerAtMarkers.bind(this.map),LOAD_DELAY);
+
 }
 
 /* Acción de buscar alumnos por país */
@@ -119,7 +121,8 @@ MapApp.prototype.searchByCountry=function(){
 				this.createInfoText(student))
 		);
 	
-	setTimeout(this.map.centerAtMarkers.bind(this.map),500);
+
+	setTimeout(this.map.centerAtMarkers.bind(this.map),LOAD_DELAY);
 }
 
 /* Obtiene la lista completa de países */

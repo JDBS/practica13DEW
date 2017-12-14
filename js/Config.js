@@ -1,6 +1,8 @@
 const DEFAULT_ZOOM_INITIAL=5;
 const DEFAULT_LATITUDE=50.8495314;
 const DEFAULT_LONGITUDE=8.7951508;
+const ANIMATION_DELAY=2100; //delay in ms to stop animation
+const LOAD_DELAY=600; //wait time for markers load
 
 const DEFAULT_ZOOM=5;
 const DEFAULT_WIDTH_ZOOM_FIX_FACTOR=30;

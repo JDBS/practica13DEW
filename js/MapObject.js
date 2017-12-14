@@ -5,6 +5,7 @@ function MapObject(config){
   this.map=undefined;
   this.markers=[]; //Array of Structs width markers and infowindows
   this.locations=[];
+  this.markerCluster=undefined;
 
   this.initialize(config);
 }
@@ -43,6 +44,8 @@ MapObject.prototype.initialize=function(config){
   //Zoom calculation
   this.setZoom(getDefaultZoomFor(containerWidth,containerHeight));
   this.loadLocations();
+  this.markerCluster= new MarkerClusterer(this.map,[],
+        {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 }
 
 /* Centra la cámara entre todos los marcadores */
@@ -109,7 +112,7 @@ MapObject.prototype.addMarkerByAddress=function(address, content){
 
         this.addLocation(address,position);//Add location to cache
 
-        this.addMarkerByPosition(position, content);
+        this.addMarkerByPosition(position, content, address);
       } else {
         console.error('MapObject geocodePosition(location) was not success because: ' + status);
       }
@@ -117,53 +120,82 @@ MapObject.prototype.addMarkerByAddress=function(address, content){
   
 }
 
+//If exists a marker with same position, returns his InfoWindow
+MapObject.prototype.getInfoWindowForAddress=function(address){
+  var infoWindow=undefined;
+
+  this.markers.forEach(
+    (marker)=>{
+      if(marker.infoWindow.address==address){//address comparison
+        infoWindow=marker.infoWindow;
+        marker.marker.count++;  //Increase counter for students
+      }
+    }
+    );
+  return infoWindow;
+}
 
 /*Método interno: Añade un marcado con una posición exacta*/
-MapObject.prototype.addMarkerByPosition=function(position,content){
+MapObject.prototype.addMarkerByPosition=function(position,content,address){
+  var infoWindow = this.getInfoWindowForAddress(address);
 
-  var infoWindow = new google.maps.InfoWindow({
-    content: content
-  });
-  marker = new google.maps.Marker(
-          {
-              map: this.map,
-              position: position.getLiteralPosition(),
-              infoWindow
+  if(infoWindow){
+    infoWindow.setContent(infoWindow.getContent() + content);
+  }else{
+
+    infoWindow = new google.maps.InfoWindow({
+      position: position.getLiteralPosition(),
+      content: content
+    });
+
+    infoWindow.address=address;
+
+    var marker = new google.maps.Marker(
+            {
+                map: this.map,
+                position: position.getLiteralPosition(),
+                title: address
+            });
+    this.markerCluster.addMarker(marker);
+
+    marker.addListener('click', function() {
+            infoWindow.open(this.map);
           });
 
+    marker.setAnimation(google.maps.Animation.BOUNCE);
 
-  marker.addListener('click', function() {
-          infoWindow.open(this.map, marker);
-        });
+    marker.count=1;
 
-  var markerStruct={
-    marker,
-    infoWindow
+    setTimeout(()=>{
+      marker.setAnimation(null);
+      marker.setLabel(marker.count.toString());
+    },ANIMATION_DELAY);
+
+    var markerStruct={
+      marker,
+      infoWindow
+    }
+
+    this.markers.push(markerStruct);
   }
-
-  this.markers.push(markerStruct);
 }
 
 /* Añade un marcador */
-MapObject.prototype.addMarker=function(position,content){
-  if(typeof position == "string"){//Si la posicion es una direccion
-    var positionLoad=this.tryGetLocation(position); //pregunta a la caché
-    if(positionLoad){ //si existe
-      this.addMarkerByPosition(positionLoad,content); //la usa
-    }else{//si no
-      this.addMarkerByAddress(position, content);//la consulta a google
-    }
-  }else{//si la posición es exacta
-    this.addMarkerByPosition(position,content); //la usa
+MapObject.prototype.addMarker=function(address,content){
+  if(typeof address != "string")
+    return;
+  var positionLoad=this.tryGetLocation(address); //pregunta a la caché
+  if(positionLoad){ //si existe
+    this.addMarkerByPosition(positionLoad,content,address); //la usa
+  }else{//si no
+    this.addMarkerByAddress(address, content);//la consulta a google
   }
-
-
 }
 
 MapObject.prototype.removeMarkers=function(){
-  this.markers.forEach(
-      (markerStruct) => markerStruct.marker.setMap(null)
-    );
+  if(this.markers.length<=0)
+    return;
+  this.markerCluster.clearMarkers();
   this.markers=[];
 }
 
@@ -191,5 +223,3 @@ MapObject.prototype.getZoom=function(){
   if(map)
     return this.map.zoom;
 }
-
-//var map = new MapObject({});
